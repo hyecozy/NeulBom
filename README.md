@@ -11,7 +11,7 @@ By Team 얼라(Always Live)__IN 울산 KH 정보교육원
 - Java / Spring / OracleDB / MyBatis / JQuery / Ajax / HTML, CSS, JavaScript
 
 
-### 🤔What hyecozy did🤔
+### 🤔What hyecozy did (📁Member)🤔
 <h4>메인화면</h4>
 Geolocation API와 OpenWeaterMap API 이용한 사용자 날씨, TO READ LIST (할 일 리스트), 쿠키 이용 팝업창 (연체 도서 안내)
 <h4>로그인 / 회원 가입·탈퇴 / ID, PW 찾기</h4>
@@ -28,4 +28,4 @@ Geolocation API와 OpenWeaterMap API 이용한 사용자 날씨, TO READ LIST (
 테이블 설계 및 수정
 <br>
 <br>
-아직 수정해야 할 것 많음! 메모해 놓은 것들 차차 개선해 가기 + 주석 달기
+...아직 수정해야 할 것 많음! 메모해 놓은 것들 차차 개선해 가기 + 주석 달기
