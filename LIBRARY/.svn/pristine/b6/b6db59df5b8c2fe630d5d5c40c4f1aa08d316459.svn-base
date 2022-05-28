@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 모든 SQL문을 mapper태그 안에 작성 -->
+<mapper namespace="cartMapper">
+	<resultMap type="com.kh.library.item.vo.CartVO" id="cart">
+		<id column="CART_NUM"			property="cartNum"/>
+		<result column="ITEM_CODE"	 	property="itemCode"/>
+		<result column="MEM_ID"	 		property="memId"/>
+		<result column="ITEM_CNT"	 	property="itemCnt"/>
+		<result column="CREATE_DATE"	property="createDate"/>
+	</resultMap>
+	
+	<resultMap type="com.kh.library.item.vo.CartViewVO" id="cartView">
+		<id column="CART_NUM" 				property="cartNum"/>
+		<result column="ITEM_CODE" 			property="itemCode"/>
+		<result column="ITEM_NAME" 			property="itemName"/>
+		<result column="ITEM_PRICE" 		property="itemPrice"/>
+		<result column="TOTAL_PRICE" 		property="totalPrice"/>
+		<result column="ITEM_CNT" 			property="itemCnt"/>
+		<result column="CREATE_DATE" 		property="createDate"/>
+		<result column="MEM_ID" 			property="memId"/>
+		<result column="ITEM_AT_IMG_NAME" 	property="itemAtImgName"/>
+	</resultMap>
+	
+	<resultMap type="com.kh.library.item.vo.BuyVO" id="buy">
+		<id column="BUY_NUM" 		property="buyNum"/>
+		<result column="MEM_ID" 	property="memId"/>
+		<result column="ITEM_CODE" 	property="itemCode"/>
+		<result column="ITEM_CNT" 	property="itemCnt"/>
+		<result column="BUY_PRICE"	property="buyPrice"/>
+		<result column="BUY_DATE"	property="buyDate"/>
+		<result column="ORDER_NUM"	property="orderNum"/>
+		<result column="MEM_ADDR"	property="memAdder"/>
+		<result column="MEM_TELL"	property="memTell"/>
+		<result column="PAY_CODE"	property="payCode"/>
+	</resultMap>
+
+
+	<!-- 장바구니 입력 -->
+	<insert id="insertCart">
+	MERGE INTO CART
+	USING DUAL
+	ON (ITEM_CODE = #{itemCode} AND MEM_ID = #{memId})
+	WHEN MATCHED THEN
+		UPDATE
+		SET
+		ITEM_CNT = ITEM_CNT + #{itemCnt}
+		WHERE MEM_ID = #{memId}
+	WHEN NOT MATCHED THEN
+		INSERT (
+			CART_NUM
+			, ITEM_CODE
+			, MEM_ID
+			, ITEM_CNT
+		) VALUES (
+			(SELECT NVL(MAX(CART_NUM), 0) + 1 FROM CART)
+			, #{itemCode}
+			, #{memId}
+			, #{itemCnt}
+		)	
+	</insert>
+
+	<!-- 장바구니 조회 -->
+	<select id="selectCartList" resultMap="cartView">
+		SELECT CART_NUM
+			, ITEM_CODE
+			, ITEM_NAME
+			, ITEM_PRICE
+			, TOTAL_PRICE
+			, ITEM_CNT
+			, CREATE_DATE
+			, MEM_ID
+			, ITEM_AT_IMG_NAME
+		FROM CART_VIEW
+		WHERE MEM_ID = #{memId}
+		ORDER BY CART_NUM DESC
+	</select>
+	
+	<!-- 장바구니 건별 삭제 -->
+	<delete id="deleteCart">
+		DELETE CART
+		WHERE MEM_ID = #{memId} 
+		AND ITEM_CODE = #{itemCode}
+	</delete>
+	
+	<!-- 장바구니 수량 변경 -->
+	<update id="updateCartCnt">
+		UPDATE CART
+		SET ITEM_CNT = #{itemCnt}
+		WHERE MEM_ID = #{memId}
+		AND ITEM_CODE = #{itemCode}
+	</update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

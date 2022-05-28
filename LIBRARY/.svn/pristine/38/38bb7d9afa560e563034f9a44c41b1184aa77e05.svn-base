@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+/* 폰트 적용 */
+@font-face {
+    font-family: 'S-CoreDream-4Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+body{
+	font-family: 'S-CoreDream-4Regular';
+
+}
+
+
+header{
+		width: 100%;
+		margin: 0px auto;
+	}
+.container{
+	width: 80%;
+	margin: 0px auto;
+}
+
+a{
+	color: inherit;
+	text-decoration: none;
+}
+div[onclick]{
+	cursor: pointer;
+}
+.pageName{
+	font-size: 1.3rem;
+	margin: 2rem auto;
+}
+footer{
+	margin-top: 3rem;
+}
+input:focus {
+	outline: none;
+}
+ul{
+	list-style: none;
+}

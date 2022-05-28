@@ -1,0 +1,38 @@
+package com.kh.library.admin.service;
+
+import com.kh.library.item.vo.ItemCategoryVO;
+import com.kh.library.item.vo.ItemImgVO;
+import com.kh.library.item.vo.ItemVO;
+
+public interface ItemAdminService {
+	//상품등록
+	void insertItem(ItemVO itemVO, ItemImgVO itemImgVO);
+	
+	//상품이미지정보등록
+	void insertItemImges(ItemImgVO itemImgVO);
+	
+	//다음 이미지코드 조회
+	int selectNextItemImgCode();
+	
+	//다음 아이템코드 조회
+	String selectNextItemCode();
+	
+	//상품카테고리등록
+	void insertItemCate(ItemCategoryVO itemCategoryVO);
+	
+	//다음 상품카테고리코드 조회
+	String selectNextItemCateCode();
+	
+	//상품카테고리 수정
+	void updateCategory(ItemCategoryVO itemCategoryVO);
+	
+	//상품카테고리 삭제
+	void deleteCategory(String cateCode);
+	
+	//아이템 삭제
+	void deleteItem(String itemCode);
+	
+	//아이템 선택 삭제
+	void deleteItems(ItemVO itemVO);
+	
+}

@@ -1,0 +1,112 @@
+const ctx = document.getElementById('myChart').getContext('2d');
+const bcl = document.querySelectorAll('.bookCategory');
+const cnt = document.querySelectorAll('.cnt');
+
+let labelList = [];
+	for(let i = 0; i < cnt.length; i++){
+		 labelList.push(bcl[i].value);
+	}
+let cntList =[];
+	for(let i = 0; i < cnt.length; i++){
+		cntList.push(cnt[i].value);
+	}
+
+console.log(labelList);
+
+const myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: labelList
+        ,
+        datasets: [{
+            data: cntList 
+            ,
+            backgroundColor: [
+                '#F5F3CE',
+       	   		'#FFFEBD',
+       	   		'#FFF891',
+       	   		'#FFE671',
+       	   		'#FFF338',
+       	   		'#FFD163',
+       	   		'#DAFF2C',
+       	   		'#C1FF18',
+       	   		'#B5E61D'
+       	   		
+       	   		
+       	   		
+       	   		
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+//to read list
+
+const toReadForm = document.getElementById('toread-form');
+const toReadInput = toReadForm.querySelector('input');
+const toReadList = document.getElementById('toread-list');
+const memId = toReadForm.querySelector('input[type="hidden"]').value;
+
+function doneToRead(event){
+	$.ajax({
+		url: '/member/updateToReadList', //요청경로
+		type: 'post',
+		data: {'memId':memId, 'toReadTitle':newToRead}, //필요한 데이터 '데이터이름':값
+		success: function(result) {
+			alert('수정 성공');
+		},
+		error: function() {
+			
+			alert('실패');
+		}
+	});
+	const li = event.target.parentElement;
+	li.style.color = '#d4d4d4';
+	li.style.textDecoration = 'line-through';
+	event.target.innerText = '🤍';
+}
+
+
+function paintToRead(newToRead){
+	const li = document.createElement('li');
+	const span = document.createElement('span');
+	span.innerText = newToRead;
+	const button = document.createElement('span');
+	button.innerText = '💛';
+	li.appendChild(button);
+	li.appendChild(span);
+	toReadList.appendChild(li);
+	//button.addEventListener('click', doneToRead);
+}
+
+function handleToReadSubmit(event){
+	event.preventDefault();
+	const newToRead = toReadInput.value;
+	toReadInput.value = '';
+	
+	$.ajax({
+		url: '/member/insertToReadList', //요청경로
+		type: 'post',
+		data: {'memId':memId, 'toReadTitle':newToRead}, //필요한 데이터 '데이터이름':값
+		success: function(result) {
+			alert('추가 성공');
+		},
+		error: function() {
+			
+			alert('실패');
+		}
+	});
+	
+	paintToRead(newToRead);
+	
+}
+toReadForm.addEventListener('submit', handleToReadSubmit)

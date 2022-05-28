@@ -1,0 +1,95 @@
+@charset "UTF-8";
+
+.top-container{
+		background-color: #246350;
+		height: 100%;
+	}
+	
+	.header-loginBox{
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		height: 3rem;
+		position: relative;
+		right: 21%;
+	
+	}
+	.header-loginBoxDiv{
+		margin: 2rem 0.5rem;
+		color: #FDFAF6;
+	}
+	.header-mainBox{
+		display: flex;
+		position: relative;
+		height: 7rem;
+		width: 59%;
+		left: 18%;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.nav-logoDiv{
+		background-color: #FDFAF6;
+	}
+	.header-profile{
+		color: #F4EEE8;
+		display: flex;
+		flex-direction: row-reverse;
+		align-items: center;
+	}
+	
+	.header-profile img{
+		width: 5rem;
+		height: 5rem;
+		object-fit:cover;
+		border-radius: 30px;
+		margin-left: 1.5rem
+	}
+	
+	.adminIcon{
+		position: relative;
+		left: 7.4rem;
+		bottom: 2.8rem;
+		font-size: 2rem;
+	}
+	.nav-main-menu ul li{
+		list-style: none;
+	}
+	.nav-main-menu a{
+		text-decoration: none;
+	}
+	
+	.nav-main-menu{
+		background-color: #FAF1E6;
+	}
+	.nav-main-menu ul{
+		display: flex;
+		height: 5rem;
+		align-items: center;
+		justify-content: center;
+		list-style: none;
+	}
+	
+	.nav-main-menu > ul > li {
+		font-size: 1.4rem;
+		margin: 2rem;
+		float:left;
+		width:140px;
+		position:relative;
+	}
+	
+	.nav-main-menu > ul > li > ul {
+		width:130px;
+		display:none;
+		position: absolute;
+		font-size:20px;
+		padding-left: 0px;
+	}
+	
+	.nav-main-menu > ul > li:hover > ul {
+		display:block;
+		padding-left: 0px;
+	}
+	.nav-main-menu > ul > li > ul > li:hover {
+		background: orange;
+		transition: ease 1s;
+	}

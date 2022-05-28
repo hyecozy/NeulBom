@@ -1,0 +1,48 @@
+const ctx = document.getElementById('myChart').getContext('2d');
+const bcl = document.querySelectorAll('.bookCategory');
+const cnt = document.querySelectorAll('.cnt');
+let labelList = [];
+	for(let i = 0; i < bcl.length; i++){
+		 labelList.push(bcl[i].value);
+let cntList =[];
+	for(let i = 0; i < cnt.length; i++){
+		cntList.push(cnt[i].value);
+	}
+
+const myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+		//labels: 카테고리들
+        labels: labelList
+        ,
+        datasets: [{
+            data: cntList 
+            ,
+            backgroundColor: [
+                '#F5F3CE',
+       	   		'#FFFEBD',
+       	   		'#FFF891',
+       	   		'#FFE671',
+       	   		'#FFF338',
+       	   		'#FFD163',
+       	   		'#DAFF2C',
+       	   		'#C1FF18',
+       	   		'#B5E61D'
+       	   		
+       	   		
+       	   		
+       	   		
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+}

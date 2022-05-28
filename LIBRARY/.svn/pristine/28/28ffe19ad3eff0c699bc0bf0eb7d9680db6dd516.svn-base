@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 모든 SQL문을 mapper태그 안에 작성 -->
+<mapper namespace="cartMapper">
+	<resultMap type="com.kh.library.item.vo.ItemCategoryVO" id="itemCate">
+	<id column="CATE_CODE"		 property="cateCode"/>
+	<result column="CATE_NAME"	 property="cateName"/>
+	</resultMap>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

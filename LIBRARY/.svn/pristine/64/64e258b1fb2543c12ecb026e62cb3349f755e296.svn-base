@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 모든 SQL문을 mapper태그 안에 작성 -->
+<mapper namespace="adminMapper">
+	<resultMap type="com.kh.library.admin.vo.AdminVO" id="admin">
+	</resultMap>
+
+	<!-- 회원조회 -->
+	<select id="selectMemberList" resultMap="memberMapper.member">
+		SELECT MEM_ID
+	        , MEM_NAME
+	        , MEM_BIRTH
+	        , ROW_NUM
+	    FROM
+	    (
+	        SELECT MEM_ID
+	             , MEM_NAME
+	             , MEM_BIRTH
+	            , ROWNUM AS ROW_NUM
+	        FROM
+			    (
+			        SELECT MEM_ID
+	                    , MEM_NAME
+	                    , TO_CHAR(MEM_BIRTH, 'YYYY/MM/DD') AS MEM_BIRTH
+			        FROM BOOK_MEMBER
+			        WHERE 1=1
+			        <if test="keyword != null and !keyword.equals('')">
+			        AND UPPER(MEM_ID) LIKE UPPER('%'||#{keyword}||'%')
+			        </if>
+			        ORDER BY MEM_ID
+			    )
+			)
+			WHERE ROW_NUM &gt; = #{startNum} AND ROW_NUM &lt; =  #{endNum}
+	</select>
+	
+	<!-- 전체회원의 수  -->
+	<select id="selectAllMemberCount" resultType="int">
+		SELECT COUNT(MEM_ID)
+		FROM BOOK_MEMBER
+		WHERE 1=1
+	        <if test="keyword != null and !keyword.equals('')">
+	        AND UPPER(MEM_ID) LIKE UPPER('%'||#{keyword}||'%')
+	        </if>
+	</select>
+	
+	<!-- 알림전송 -->
+	<insert id="insertSendMessage">
+		INSERT INTO MESSAGE (
+			MSG_CODE
+			, GET_ID
+			, MSG_CONTENT
+		) VALUES (
+			(SELECT 'MSG_'||LPAD(NVL(MAX(TO_NUMBER(SUBSTR(MSG_CODE, 5))), 0) + 1, 3, 0) AS MSG_CODE FROM MESSAGE)
+			, #{getId}
+			, #{msgContent}
+		)		
+	</insert>
+	
+	<!-- 클럽 수락시 알림보내기 -->
+	<insert id="insertClubJoinMessage">
+		INSERT INTO MESSAGE (
+			MSG_CODE
+			, GET_ID
+			, MSG_CONTENT
+		) VALUES (
+			(SELECT 'MSG_'||LPAD(NVL(MAX(TO_NUMBER(SUBSTR(MSG_CODE, 5))), 0) + 1, 3, 0) AS MSG_CODE FROM MESSAGE)
+			, #{getId}
+			, '북클럽에 가입되셨습니다. 북클럽 게시판에 환영인사를 써보아요~'
+		)		
+	</insert>
+	
+	<!-- 대여정보 -->
+	<select id="selectBorrowBookInfo" resultMap="bookMapper.borrow">
+		SELECT BR_CODE
+		    , MEM_ID
+		    , TO_CHAR(BR_DATE, 'YYYY-MM-DD') AS BR_DATE
+		    , TO_CHAR(RT_DATE, 'YYYY-MM-DD') AS RT_DATE
+		    , STATUS
+		    , BOOK_CODE
+		    , TITLE 
+		FROM BORROW
+		WHERE MEM_ID = #{memId}
+	</select>
+	
+	<!-- 예약정보 -->
+	<select id="selectReserveBookInfo" resultMap="bookMapper.reserve">
+		SELECT RSV_CODE
+			, BOOK_CODE
+			, TITLE
+			, MEM_ID
+			, RSV_DATE
+		FROM RESERVE
+		WHERE MEM_ID = #{memId}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

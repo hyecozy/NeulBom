@@ -1,0 +1,99 @@
+package com.kh.library.club.service;
+
+import java.util.List;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.kh.library.club.vo.ClubApplyVO;
+import com.kh.library.club.vo.ClubBoardCmtVO;
+import com.kh.library.club.vo.ClubBoardVO;
+import com.kh.library.club.vo.ClubVO;
+import com.kh.library.member.vo.MemberVO;
+
+@Service("clubService")
+public class ClubServiceImpl implements ClubService {
+	@Autowired
+	private SqlSessionTemplate sqlSession;
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void insertUpdateClubCreate(ClubVO clubVO) {
+		sqlSession.insert("clubMapper.insertClubCreate", clubVO);
+		sqlSession.update("clubMapper.updateClubAdmin", clubVO);
+	}	
+	
+	@Override
+	public List<ClubVO> selectClubList() {
+		return sqlSession.selectList("clubMapper.selectClubList");
+	}
+
+	@Override
+	public ClubVO selectClubDetail(ClubVO clubVO) {
+		return sqlSession.selectOne("clubMapper.selectClubDetail", clubVO);
+	}
+
+	@Override
+	public void insertClubBoard(ClubBoardVO clubBoardVO) {
+		sqlSession.insert("clubMapper.insertClubBoard", clubBoardVO);
+	}
+
+	@Override
+	public List<ClubBoardVO> selectClubBoardList(ClubVO clubVO) {
+		return sqlSession.selectList("clubMapper.selectClubBoardList", clubVO);
+	}
+
+	@Override
+	public ClubBoardVO selectClubBoardDetail(ClubBoardVO clubBoardVO) {
+		return sqlSession.selectOne("clubMapper.selectClubBoardDetail", clubBoardVO);
+	}
+
+	@Override
+	public void updateClubBoardDetail(ClubBoardVO clubBoardVO) {
+		sqlSession.update("clubMapper.updateClubBoardDetail", clubBoardVO);
+	}
+
+	@Override
+	public void deleteClubBoard(ClubBoardVO clubBoardVO) {
+		sqlSession.delete("clubMapper.deleteClubBoard", clubBoardVO);
+	}
+
+	@Override
+	public void updateClubDetail(ClubVO clubVO) {
+		sqlSession.update("clubMapper.updateClubDetail", clubVO);
+	}
+
+	@Override
+	public void updateClubAdminClubCode(ClubVO clubVO) {
+		sqlSession.update("clubMapper.updateClubAdminClubCode", clubVO);
+	}
+
+	@Override
+	public void insertRegBoardCmt(ClubBoardCmtVO clubBoardCmtVO) {
+		sqlSession.insert("clubMapper.insertRegBoardCmt", clubBoardCmtVO);
+	}
+
+	@Override
+	public List<ClubBoardCmtVO> selectCbCmtList(ClubBoardCmtVO clubBoardCmtVO) {
+		return sqlSession.selectList("clubMapper.selectCbCmtList", clubBoardCmtVO);
+	}
+
+	@Override
+	public void updateCbCmt(ClubBoardCmtVO clubBoardCmtVO) {
+		sqlSession.update("clubMapper.updateCbCmt", clubBoardCmtVO);
+	}
+
+	@Override
+	public void insertClubJoin(ClubApplyVO clubApplyVO) {
+		sqlSession.insert("clubMapper.insertClubJoin", clubApplyVO);
+	}
+
+	@Override
+	public void clubMemberKick(MemberVO memberVO) {
+		sqlSession.update("memberMapper.clubMemberKick", memberVO);
+	}
+
+
+}

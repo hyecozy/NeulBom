@@ -1,0 +1,286 @@
+package com.kh.library.member.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.SecureRandom;
+
+import javax.annotation.Resource;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.kh.library.club.vo.ClubVO;
+import com.kh.library.member.service.MemberService;
+import com.kh.library.member.vo.MemberImageVO;
+import com.kh.library.member.vo.MemberVO;
+
+@Controller
+@RequestMapping("/member")
+public class MemberController {
+	@Resource(name = "memberService")
+	private MemberService memberService;
+
+	@Autowired
+	private JavaMailSender mailSender;
+
+	@Autowired
+	private BCryptPasswordEncoder pwEncoder;
+
+	// --------------회원가입---------------
+	// 회원가입창 이동
+	@GetMapping("/join")
+	public String joinForm() {
+		return "member/join_form";
+	}
+
+	// 아이디 중복 체크
+	@ResponseBody
+	@PostMapping("/checkId")
+	public int checkId(String memId) {
+		return memberService.checkId(memId);
+	}
+
+	// 가입
+	@PostMapping("/join")
+	public String join(MemberVO memberVO, MultipartHttpServletRequest multi) {
+		memberVO.setMemTell(memberVO.getMemTell().replace(",", "-"));
+		memberVO.setMemAddr(memberVO.getMemAddr().replace(",", " "));
+		memberVO.setMemEmail(memberVO.getMemEmail().replace(",", "@"));
+		
+		//-------------------비밀번호 암호화-----------------------//
+		String encodePw = pwEncoder.encode(memberVO.getMemPwd());
+		memberVO.setMemPwd(encodePw);
+		
+		//-------------------프로필 이미지 첨부--------------------// 
+		MultipartFile file = multi.getFile("file");
+		//다음에 들어갈 MEM_IMG_CODE값
+		int nextNum = memberService.selectNextMemImgCode();
+		
+		if(!file.getOriginalFilename().equals("")) {
+			
+			String uploadPath = "D:\\dev\\workspaceSTS\\LIBRARY\\src\\main\\webapp\\resources\\images\\member\\";
+			
+			try {
+				String memOriginName = file.getOriginalFilename();
+				String memAtImgName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+				file.transferTo(new File(uploadPath + memAtImgName));
+				MemberImageVO vo = new MemberImageVO();
+				vo.setMemImgCode(nextNum++);
+				vo.setMemOriginName(memOriginName);
+				vo.setMemAtImgName(memAtImgName);
+				vo.setMemId(memberVO.getMemId());
+				memberVO.setMemImage(memAtImgName);
+				memberService.joinMember(memberVO);
+				memberService.insertMemberImage(vo);
+				
+			} catch (IllegalStateException e) {
+				//업로드 예외 발생시
+				e.printStackTrace();
+			} catch (IOException e) {
+				//파일 입출력 예외 발생시
+				e.printStackTrace();
+			}
+			
+		}
+		else {
+			MemberImageVO vo = new MemberImageVO();
+			vo.setMemImgCode(nextNum++);
+			vo.setMemOriginName("profile_sample.jpg");
+			vo.setMemAtImgName("profile_sample.jpg");
+			vo.setMemId(memberVO.getMemId());
+			memberVO.setMemImage("profile_sample.jpg");
+			memberService.joinMember(memberVO);
+			memberService.insertMemberImage(vo);
+		}
+
+		
+		return "member/join_result";
+	}
+
+	// ----------------로그인-----------------
+	// 로그인창 이동
+	@GetMapping("/login")
+	public String loginForm() {
+		return "member/login_form";
+	}
+
+	// 로그인
+	@ResponseBody
+	@PostMapping("/login")
+	public int login(String memId, String memPwd, HttpSession session) {
+		MemberVO loginMem = memberService.login(memId);
+		int result = 1;
+		if (loginMem != null && pwEncoder.matches(memPwd, loginMem.getMemPwd())) {
+			session.setAttribute("loginInfo", loginMem);
+			//session.setMaxInactiveInterval(60*60);
+			result = 0;
+		}
+		return result; // 메인 화면 경로 정하기
+	}
+
+	// 로그아웃
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute("loginInfo");
+		return "redirect:/admin/test";
+	}
+
+	// 아이디 찾기
+	@GetMapping("/findId")
+	public String findIdForm() {
+		return "find/find_id";
+	}
+
+	@ResponseBody
+	@PostMapping("/findId")
+	public String findInd(MemberVO memberVO) {
+		String result = memberService.findId(memberVO);
+		System.out.println(result);
+		return result;
+	}
+
+	// 비밀번호 찾기
+	@GetMapping("/findPwd")
+	public String findPwdForm() {
+		return "find/find_pwd";
+	}
+
+	@ResponseBody
+	@PostMapping("/findPwd")
+	public void findPwd(MemberVO memberVO) {
+		// 임시 비번 보낼 이메일 조회
+		String memEmail = memberService.selectEmail(memberVO);
+		// 임시 비밀번호 생성 소문자 + 대문자 + 숫자 포함 8자리
+		String tempPwd = getTempPwd();
+		memberVO.setMemPwd(tempPwd);
+		memberService.updateTempPwd(memberVO);
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper messageHelper;
+			messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setFrom("surfurlove@gmail.com");
+			messageHelper.setTo(memEmail);
+			messageHelper.setSubject("양심 도서관 비밀번호 잃어버리셨죠?");
+			messageHelper.setText("임시 비밀번호는  " + tempPwd + "  입니다. 로그인 후 새비밀번호로 변경해주세요.");
+			mailSender.send(message);
+
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	// ---------------마이페이지---------------
+
+	// 내 정보 상세조회 이동
+	@GetMapping("/myPageDetail")
+	public String myPageDetail(Model model, String memId) {
+		model.addAttribute("memberInfo", memberService.selectMyPageDetail(memId));
+		System.out.println("@@@@@@@@@@@" + (memberService.selectMyPageDetail(memId).getMemImage()));
+		return "mypage/my_page_detail";
+	}
+	
+	
+	//기본 정보 수정
+	@PostMapping("/updateBasicInfo")
+	public String updateBasicInfo(Model model, MemberVO memberVO, MultipartHttpServletRequest multi, HttpSession session) {
+		MultipartFile file = multi.getFile("file");
+		
+		if(!file.getOriginalFilename().equals("")) {
+			String uploadPath = "D:\\dev\\workspaceSTS\\LIBRARY\\src\\main\\webapp\\resources\\images\\member\\";
+			
+			try {
+				String memOriginName = file.getOriginalFilename();
+				String memAtImgName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+				file.transferTo(new File(uploadPath + memAtImgName));
+				MemberImageVO vo = new MemberImageVO();
+				vo.setMemOriginName(memOriginName);
+				vo.setMemAtImgName(memAtImgName);
+				vo.setMemId(memberVO.getMemId());
+				memberVO.setMemImage(memAtImgName);
+				memberService.updateMemImage(vo);
+				
+			} catch (IllegalStateException e) {
+				//업로드 예외 발생시
+				e.printStackTrace();
+			} catch (IOException e) {
+				//파일 입출력 예외 발생시
+				e.printStackTrace();
+			}
+			
+		}
+		//기본 정보 수정은 했는데 프로필은 바꾸지 않았을 경우
+		else if(file.getOriginalFilename().equals("")){
+			memberVO.setMemImage(memberService.selectMemAtImgName(memberVO.getMemId()));
+			/*
+			 MemberImageVO vo = new MemberImageVO();
+			 vo.setMemOriginName("profile_sample.jpg");
+			 vo.setMemAtImgName("profile_sample.jpg"); vo.setMemId(memberVO.getMemId());
+			 memberVO.setMemImage("profile_sample.jpg"); memberService.updateMemImage(vo);
+			 */
+		}
+		
+		memberService.updateBasicInfo(memberVO);
+		session.setAttribute("loginInfo", memberService.login(memberVO.getMemId()));
+		model.addAttribute("memId", memberVO.getMemId());
+		return "redirect:/member/myPageDetail";
+	}
+
+	// 대출 리스트 상세
+	@GetMapping("/reserveListDetail")
+	public String reserveListDetail() {
+		return "member/reserveList_detail";
+	}
+
+	// 구매 목록 상세
+	
+	// 독서 플래너
+	@GetMapping("/bookPlaner")
+	public String bookPlaner(String memId) {
+		return "mypage/book_planer";
+	}
+	//독서 플래너 폼 이동
+	@GetMapping("/bookPlanerForm")
+	public String bookPlanerForm() {
+		return "mypage/book_planer_form";
+	}
+
+	//북클럽 조회
+	@GetMapping("/selectBookClub")
+	public String selectBookClub(String memId, Model model) {
+		ClubVO clubVO = memberService.selectMyBookClub(memId);
+		model.addAttribute("myBookClub", clubVO);
+		return "mypage/my_book_club";
+	}
+	//희망 도서 신청
+	
+	// 대소문자 + 숫자 포함 8자리 문자열 생성 및 리턴
+	public String getTempPwd() {
+		String lowerCase = "abcdefghijklmnopqrstuvwxyz";
+		String upperCase = lowerCase.toUpperCase();
+		String num = "0123456789";
+		String baseStr = lowerCase + upperCase + num;
+
+		StringBuilder tempPwd = new StringBuilder();
+		for (int i = 0; i < 8; i++) {
+			SecureRandom random = new SecureRandom();
+			int index = random.nextInt(baseStr.length());
+			char c = baseStr.charAt(index);
+			tempPwd.append(String.valueOf(c));
+		}
+		return tempPwd.toString();
+	}
+}

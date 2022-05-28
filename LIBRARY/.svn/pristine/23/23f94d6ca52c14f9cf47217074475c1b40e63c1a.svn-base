@@ -1,0 +1,16 @@
+function recommendBook(){
+	
+	var memId = $('#rcdBook #memId').val();
+	
+	alert(memId);
+}
+
+function limitBrCnt(){
+	
+	alert('대여권수가 5권을 초과할 수 없습니다.');
+}
+
+function limitOverdue(){
+	
+	alert('연체이력으로 대여할 수 없습니다.');
+}

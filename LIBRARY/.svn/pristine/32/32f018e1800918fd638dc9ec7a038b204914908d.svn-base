@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 모든 SQL문을 mapper태그 안에 작성 -->
+<mapper namespace="adminMapper">
+	<resultMap type="com.kh.library.admin.vo.AdminVO" id="admin">
+	</resultMap>
+
+	<!-- 회원조회 -->
+	<select id="selectMemberList" resultMap="memberMapper.member">
+		SELECT MEM_ID
+			, MEM_NAME
+		FROM BOOK_MEMBER
+		ORDER BY MEM_Id
+	</select>
+	
+	<insert id="insertSendMessage">
+		INSERT INTO MESSAGE (
+			MSG_CODE
+			, GET_ID
+			, MSG_CONTENT
+		) VALUES (
+			(SELECT 'MSG_'||LPAD(NVL(MAX(TO_NUMBER(SUBSTR(MSG_CODE, 5))), 0) + 1, 3, 0) AS MSG_CODE FROM MESSAGE)
+			, #{getId}
+			, #{msgContent}
+		)		
+	</insert>
+	
+	<select id="">
+		
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

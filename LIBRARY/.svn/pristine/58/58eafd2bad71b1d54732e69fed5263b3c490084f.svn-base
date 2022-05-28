@@ -1,0 +1,22 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+독서 플래너
+<div>
+
+<c:forEach items="${complitBookList }" var="complitBook">
+	${complitBook.title }
+</c:forEach>
+
+</div>
+<button onclick="location.href='/member/bookPlanerForm';">기록하기</button>
+</body>
+</html>
+

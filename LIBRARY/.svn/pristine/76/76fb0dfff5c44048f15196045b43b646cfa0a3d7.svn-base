@@ -1,0 +1,49 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	.myPageDetail table{
+		width: 100%;
+	}
+	img{
+		width: 10rem;
+	}
+</style>
+</head>
+<body>
+
+
+	<div class="pageName">
+		내 정보 상세조회
+	</div>
+	<div class="myPageDetail">
+		<table>
+			<tr>
+				<td colspan="2">
+				<!-- ${memberInfo.memImage } -->
+				<img alt="" src="/resources/images/member/profile_sample.jpg">
+				</td>
+			</tr>
+			<tr>
+				<td>아이디</td>
+				<td>${memberInfo.memId }</td>
+			</tr>
+			<tr>
+				<td>이름</td>
+				<td>${memberInfo.memName }</td>
+			</tr>
+			<tr>
+				<td>전화번호</td>
+				<td>${memberInfo.memTell }</td>
+			</tr>
+		</table>
+	
+		
+	</div>
+</body>
+</html>

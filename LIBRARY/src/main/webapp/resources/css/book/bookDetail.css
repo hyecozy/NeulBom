@@ -1,0 +1,80 @@
+@charset "UTF-8";
+
+.title{
+	border: 1px solid #dddddd;
+	padding: 10px;
+	background-color: #E7EDE4;
+	margin-bottom: 15px;
+	font-size: 23px;
+}
+
+.bkDetail{
+	display: inline-block;
+	border: 1px solid #dddddd;
+	padding: 15px;
+	margin-bottom: 15px;
+}
+
+.bkDetail .tit{
+	width: 100px;
+	height: auto; 
+	font-weight: 600;
+	padding-left: 15px;
+	margin-bottom: 15px;
+}
+
+.bkDetail img{
+	border: 1px solid #dddddd;
+	padding: 5px; 
+}
+
+.bkDetail .img{
+	padding-top: 5px;
+	padding-left: 30px;
+	text-align: center;
+}
+
+.bkDetail .content{
+	padding-top:0px;
+	padding-left: 15px;	
+	padding-bottom:30px;
+}
+.bkDetail .imgT{
+	float: left;
+	width: 25%;
+}
+
+.bkDetail .imgT .rbtn{
+	padding-top:10px;
+	padding-left:25px;
+	text-align:center;
+}
+
+.bkDetail .infoT{
+	float: right;
+	width: 75%;
+	margin-top:10px;
+}
+.bkDetail .infoT .brInfo{
+	padding-left: 15px;
+	width:100%;
+}
+.brInfo table{
+	border: 1px solid #dddddd;
+	width:100%;
+	text-align: center;
+}
+ .brInfo tr, .brInfo td{
+ 	border: 1px solid #dddddd;
+ }
+ .brInfo tr:first-child{
+ 	font-weight: 600;
+ }
+.notice{
+	
+	padding: 15px;
+	margin-bottom: 15px;
+}
+.notice h4{
+	color:  #16784B;
+}

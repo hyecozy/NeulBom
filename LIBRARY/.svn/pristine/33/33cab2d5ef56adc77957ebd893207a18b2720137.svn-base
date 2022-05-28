@@ -1,0 +1,80 @@
+@charset "UTF-8";
+
+.top-container{
+		background-color: #02475E;
+		height: 100%;
+	}
+	
+	.header-loginBox{
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		height: 3rem;
+		position: relative;
+		right: 21%;
+	
+	}
+	.header-loginBoxDiv{
+		margin: 2rem 0.5rem;
+		color: #FDFAF6;
+	}
+	.header-mainBox{
+		display: flex;
+		position: relative;
+		height: 7rem;
+		width: 59%;
+		left: 18%;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.nav-logoDiv{
+		background-color: #FDFAF6;
+	}
+	.header-profile{
+		color: #F4EEE8;
+		display: flex;
+		flex-direction: row-reverse;
+		align-items: center;
+	}
+	
+	.header-profile img{
+		width: 5rem;
+		border-radius: 30px;
+		margin-left: 1.5rem
+	}
+	
+	
+	
+	
+	.nav-main-menu{
+		background-color: #FAF1E6;
+	}
+	.nav-main-menu ul{
+		display: flex;
+		height: 5rem;
+		align-items: center;
+		justify-content: center;
+		list-style: none;
+	}
+	.nav-main-menu li{
+		font-size: 1.4rem;
+		margin: 2rem;
+	}
+	.nav-main-menu > ul > li {
+		float:left;
+		position:relative;
+	}
+	
+	.nav-main-menu > ul > li > ul {
+		width:150px;
+		display:none;
+		position: absolute;
+		font-size:5px;
+		background: skyblue;
+		padding-left: 0px;
+	}
+	
+	.nav-main-menu > ul > li:hover > ul {
+		display:block;
+		padding-left: 0px;
+	}
