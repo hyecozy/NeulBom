@@ -150,7 +150,7 @@ public class MemberController {
     		  result = 0;
     	  }
       }
-      return result; // 메인 화면 경로 정하기
+      return result;
    }
 
    // 로그아웃
@@ -183,20 +183,14 @@ public class MemberController {
    @ResponseBody
    @PostMapping("/findPwd")
    public void findPwd(MemberVO memberVO) {
-	   
-	      
-	      
       // 임시 비번 보낼 이메일 조회
       String memEmail = memberService.selectEmail(memberVO);
       // 임시 비밀번호 생성 소문자 + 대문자 + 숫자 포함 8자리
       String tempPwd = getTempPwd();
       
-      
       //-------------------비밀번호 암호화-----------------------//
       String encodePw = pwEncoder.encode(tempPwd);
       memberVO.setMemPwd(encodePw);
-      
-      
       
      // memberVO.setMemPwd(tempPwd);
       memberService.updateTempPwd(memberVO);
@@ -358,7 +352,7 @@ public class MemberController {
    }
 
    
-   // 독서 플래너
+   // 독서 플래너 by 혜수 22-06-04 20:48 필요없는 코드 덜어냄
 	@GetMapping("/bookPlaner")
 	public String bookPlaner(Model model, HttpSession session, BookComplitVO bookComplitVO) {
 		//1.전체 데이터의 개수 조회
@@ -370,29 +364,31 @@ public class MemberController {
 		//2.페이징 처리를 위한 세팅 메소드 호출
 		bookComplitVO.setPageInfo();
 		List<BookComplitVO> list = memberService.selectBookPlanerForPage(bookComplitVO);
-		String memId = bookComplitVO.getMemId();
+		
+	    
+	    //완독 도서 있으면 읽은 도서의 카테고리 위주로 추천하며 읽은 도서는 제외하여 랜덤 조회함
+	    //완독 도서 없으면 도서관 전체 도서 중 추천수 높은 거 추천
 		if(!(memberService.selectRecommendBook(bookComplitVO.getMemId())).isEmpty()) {
-			if((memberService.selectRecommendBook(bookComplitVO.getMemId())).size() < 3) {
-				model.addAttribute("rcdList", memberService.selectRecommendBook(bookComplitVO.getMemId()));
-			}
-			else {
-				model.addAttribute("rcdList", getRcdList(memberService.selectRecommendBook(bookComplitVO.getMemId())));
-				
-			}
+			
+			//if((memberService.selectRecommendBook(bookComplitVO.getMemId())).size() < 3) {
+			//	model.addAttribute("rcdList", memberService.selectRecommendBook(bookComplitVO.getMemId()));
+			//}
+			//else
+			model.addAttribute("rcdList", getRcdListRandom(memberService.selectRecommendBook(bookComplitVO.getMemId())));
 			}
 		else {
-			model.addAttribute("rcdList", getRcdList(memberService.selectReadYet(memId)));
+			model.addAttribute("rcdList", memberService.selectReadYet(bookComplitVO.getMemId()));
 		}
 	 	
 		
-		model.addAttribute("complitBookList", list);
-		model.addAttribute("myTopThree", memberService.topThreeBookPlaner(memId));
-		model.addAttribute("chartList", memberService.selectBookPlanerChart(memId));
+		model.addAttribute("complitBookList", list); //독서기록 조회를 위한 리스트
+		model.addAttribute("myTopThree", memberService.topThreeBookPlaner(bookComplitVO.getMemId())); //취향 카테고리 top3
+		model.addAttribute("chartList", memberService.selectBookPlanerChart(bookComplitVO.getMemId())); //chart.js API 그래프
 		
 		return "mypage/book_planer";
 	}
 	
-	//독서 취향 새 창
+	//독서 기록 쌓아보기 새 창
 	  @GetMapping("/favChk")
 	   public String favChk(HttpSession session, Model model) {
 		  String memId = ((MemberVO)(session.getAttribute("loginInfo"))).getMemId();
@@ -408,11 +404,10 @@ public class MemberController {
 				}
 			}
 		  	model.addAttribute("highPct", memberService.selectComplitHighPct(memId));
-		  	System.out.println(memberService.selectComplitHighPct(memId));
 		  	model.addAttribute("complitBookList", list);
 		  	return "favor/book_planer_favorChk";
 	  }
-	  //독서 플래너 상세조회 in 북적
+	  //독서 기록 쌓아보기 상세조회 
 	  @GetMapping("/favorBookPlanerDetail")
 	  public String favorBookPlanerDetail(BookComplitVO bookComplitVO, Model model) {
 		  model.addAttribute("bookPlaner", memberService.selectBookPlanerDetail(bookComplitVO));
@@ -543,7 +538,7 @@ public class MemberController {
    }
    
    //리스트가 아녀도 되는 것 같긴 한데...
-	public List<BookComplitVO> getRcdList(List<BookComplitVO> list){
+	public List<BookComplitVO> getRcdListRandom(List<BookComplitVO> list){
 		
 		List<BookComplitVO> rcdList = new ArrayList<BookComplitVO>();
 		Random random = new Random();

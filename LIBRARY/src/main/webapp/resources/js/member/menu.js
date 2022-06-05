@@ -26,6 +26,8 @@ function onGeoOk(position){
 			const icon = data.weather[0].icon.substr(0, 2);
 			if(data.name === 'Ulsan'){
 				data.name = '울산';
+			} else if(data.name === 'Songjeong'){
+				data.name = '울산';
 			}
 		 	weather01.innerText = `지금 ${data.name} 날씨는 ${data.weather[0].main}`;
 		 	weatherIcon.innerHTML = `<i class="${weatherIconList[icon]}"></i>`;

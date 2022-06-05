@@ -18,8 +18,8 @@ function previewFile(){
 		reader.readAsDataURL(file);
 	}
 }
-//프사 삭제
 
+//프사 삭제 시 프로필 이미지 미리보기
 function deleteProfileImage(){
 	const hiddenMemImg = document.querySelector('#basicForm input[name="memImage"]');
 	
