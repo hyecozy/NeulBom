@@ -16,8 +16,10 @@ $.ajax({
 				newId.value = '';							
 			}
 			else if(result === 0) {
+				alert(document.querySelector('#joinForm button').value);
 				$('.id-available').css("display", "inline-block");
 				$('.id-unavailable').css("display", "none");
+				document.querySelector('#joinForm button').value = 'Y';
 			}
 			
 		},
@@ -36,11 +38,9 @@ by 혜수
 memPwd 유효성 검사 수정 ('영문,숫자,특문 포함' 조건 추가)
 */
 
-$.validator.addMethod('pwdChk',  function( value, element ) {
-
-return this.optional(element) ||  /^.*(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/.test(value);
-
-}); 
+$.validator.addMethod('pwdChk', function(value, element){
+	return this.optional(element)||/^.*(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/.test(value);
+});
 $('#joinForm').validate({
 	debug: false,
 	groups:{
@@ -96,7 +96,7 @@ $('#joinForm').validate({
 		memId: {
 		required: '필수 입력 항목입니다.',
         minlength: '5자 이상 입력해 주셔야 해요.',           
-        maxlength: '12자 이하로 입력해 주셔야 해요.'            
+        maxlength: '12자 이하로 입력해 주셔야 해요.'
         },
         memPwd: {
 		required: '필수 입력 항목입니다.',
@@ -153,12 +153,19 @@ $('#joinForm').validate({
 		error.css('margin-top', '2px');
 	  },
       submitHandler: function(form) {
+		alert(document.querySelector('#joinForm button').value + '3차'); //확인용 alert
 		$('#inputTell1').attr('name', 'memTell');
 		$('#inputTell2').attr('name', 'memTell');
 		$('#inputEmail1').attr('name', 'memEmail');
 		$('#inputEmail2').attr('name', 'memEmail');
 		removeSpecData(form);
-        form.submit();   //유효성 검사를 통과시 전송
+		//아이디 중복확인 여부 확인 안됨 -> if문 안 타고 바로 else문 탐. Y/N으로 검증해도 무조건 submit탐
+		//if(document.querySelector('#joinForm button').value === 'Y'){
+	        form.submit();   //유효성 검사를 통과시 전송
+		//}
+		//else{
+	    //    alert('아이디 중복확인');
+		//}
       }
    });
 

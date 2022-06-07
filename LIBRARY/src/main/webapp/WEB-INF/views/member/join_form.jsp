@@ -64,7 +64,7 @@
 		      <div class="id-unavailable">다른 사람이 사용 중인 아이디입니다.</div>    
 		    </div>
 		    <div class="col-sm-2">
-		      <button type="button" class="btn btn-secondary" onclick="checkId();">중복확인</button>
+		      <button type="button" class="btn btn-secondary" value="N" onclick="checkId();">중복확인</button>
 		    </div>  
 		 </div>
 		    
@@ -175,7 +175,7 @@
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <!-- jQuery validation 문법 쓰기 : 주의! jQuery 문법을 쓴 후에 적어야 됨-->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script type="text/javascript" src="/resources/js/member/join_form.js?ver=58"></script>
+<script type="text/javascript" src="/resources/js/member/join_form.js?ver=60"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </body>
 </html>
