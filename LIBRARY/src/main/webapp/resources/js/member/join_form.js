@@ -1,14 +1,19 @@
-/*아이디 중복 체크 */
+/*아이디 중복 체크
+by 혜수
+22-06-07 23:22
+중복 아이디 입력 시, set input value ''
+*/
 function checkId(){
-const newId = document.getElementById('inputId1').value;
+const newId = document.getElementById('inputId1');
 $.ajax({
 		url: '/member/checkId', //요청경로
 		type: 'post',
-		data: {'memId':newId}, //필요한 데이터 '데이터이름':값
+		data: {'memId':newId.value}, //필요한 데이터 '데이터이름':값
 		success: function(result) {
 			if(result === 1){
 				$('.id-unavailable').css("display", "inline-block");
 				$('.id-available').css("display", "none");
+				newId.value = '';							
 			}
 			else if(result === 0) {
 				$('.id-available').css("display", "inline-block");
