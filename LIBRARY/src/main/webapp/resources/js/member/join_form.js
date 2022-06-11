@@ -3,6 +3,7 @@ by 혜수
 22-06-07 23:22
 중복 아이디 입력 시, set input value ''
 */
+let isCheckIdVal = document.querySelector('#joinForm button').value;
 function checkId(){
 const newId = document.getElementById('inputId1');
 $.ajax({
@@ -16,10 +17,9 @@ $.ajax({
 				newId.value = '';							
 			}
 			else if(result === 0) {
-				alert(document.querySelector('#joinForm button').value);
 				$('.id-available').css("display", "inline-block");
 				$('.id-unavailable').css("display", "none");
-				document.querySelector('#joinForm button').value = 'Y';
+				isCheckIdVal = 'Y';
 			}
 			
 		},
@@ -29,8 +29,22 @@ $.ajax({
 		}
 	});
 }
-
-
+/*아이디 중복 체크를 했는지 확인
+by 혜수
+22-06-11 14:49
+중복확인 버튼을 눌렸다면 value='Y' 안눌렸다면 'N'
+'Y'일시 회원가입 버튼 타입 submit으로 바뀜
+'N'일시 회원가입 버튼 타입 그대로 button이며 안내 alert
+ */
+function isCheckId(){
+	if(isCheckIdVal === 'N'){
+		alert('아이디 중복을 확인해 주세요.');
+	}
+	else{
+		$('#joinBtn').attr('type', 'submit');
+	}
+}
+document.getElementById('joinBtn').addEventListener('click', isCheckId);
 
 /*유효성 검사
 by 혜수
@@ -153,19 +167,20 @@ $('#joinForm').validate({
 		error.css('margin-top', '2px');
 	  },
       submitHandler: function(form) {
-		alert(document.querySelector('#joinForm button').value + '3차'); //확인용 alert
+		alert(document.querySelector('#joinForm button').value + '6차'); //확인용 alert
 		$('#inputTell1').attr('name', 'memTell');
 		$('#inputTell2').attr('name', 'memTell');
 		$('#inputEmail1').attr('name', 'memEmail');
 		$('#inputEmail2').attr('name', 'memEmail');
 		removeSpecData(form);
 		//아이디 중복확인 여부 확인 안됨 -> if문 안 타고 바로 else문 탐. Y/N으로 검증해도 무조건 submit탐
-		//if(document.querySelector('#joinForm button').value === 'Y'){
+		/*if(document.querySelector('#joinForm button').value === 'Y'){
+			alert('Y를 탔음');
 	        form.submit();   //유효성 검사를 통과시 전송
-		//}
-		//else{
-	    //    alert('아이디 중복확인');
-		//}
+		}
+		else{
+	        
+		}*/
       }
    });
 

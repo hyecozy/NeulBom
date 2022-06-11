@@ -160,7 +160,7 @@
 		 </div>
 		 
 		 <div class="wrapper">
-              <button type="submit"><span>회원가입</span></button>
+              <button type="button" id="joinBtn"><span>회원가입</span></button>
          </div>
            
            
@@ -175,7 +175,7 @@
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <!-- jQuery validation 문법 쓰기 : 주의! jQuery 문법을 쓴 후에 적어야 됨-->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script type="text/javascript" src="/resources/js/member/join_form.js?ver=60"></script>
+<script type="text/javascript" src="/resources/js/member/join_form.js?ver=69"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </body>
 </html>
