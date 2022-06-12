@@ -57,7 +57,12 @@ menuBtn.addEventListener('click', () => {
 
 
 
-//to read list
+/*to read list
+by 혜수
+22-06-12 22:49
+할 일 목록 생성/완료/삭제 중
+완료 기능 수정 중
+*/
 const toReadForm = document.getElementById('toread-form');
 const toReadInput = toReadForm.querySelector('input');
 const toReadList = document.getElementById('toread-list');
@@ -66,11 +71,12 @@ const readYetIcon = '💛';
 
 const TODOS_KEY = 'todos';
 
+let savedToReads;
 let toReads = [];
 
-function saveToDos(){
+function saveToRead(){
 	localStorage.setItem(TODOS_KEY, JSON.stringify(toReads));
-	
+	getToRead();
 }
 
 
@@ -78,24 +84,17 @@ function deleteToRead(event){
 	const li = event.target.parentElement;
 	li.remove();
 	toReads = toReads.filter((toRead) => toReads.id !== parseInt(li.id));
-	saveToDos();
+	saveToRead();
 }
 
-function notDoneToRead(event){
-	let li = event.target.parentElement;
-	li.firstChild.innerText = readYetIcon
-	li.style.textDecoration = 'none';
-	li.style.color = 'black';
-	li.firstChild.addEventListener('click', doneToRead);
-	saveToDos();
-}
+
 function doneToRead(event){
 	let li = event.target.parentElement;
 	li.style.textDecoration = 'line-through';
 	li.style.color = '#d4d4d4';
 	li.firstChild.innerText = readDoneIcon;
 	li.firstChild.addEventListener('click', notDoneToRead);
-	saveToDos();
+	saveToRead();
 }
 
 function paintToRead(newToRead){
@@ -123,22 +122,25 @@ function handleToReadSubmit(event){
 	const newToReadObj = {
 		text: newToRead,
 		id: Date.now(),
+		done: false
 	};
 	
 	toReads.push(newToReadObj);
 	paintToRead(newToReadObj);
-	saveToDos();
+	saveToRead();
+}
+
+function getToRead(){
+	savedToReads = localStorage.getItem(TODOS_KEY);
 }
 
 toReadForm.addEventListener('submit', handleToReadSubmit);
 
+getToRead();
 
-const savedToDos = localStorage.getItem(TODOS_KEY);
-
-if(savedToDos !== null){
-	const parsedToDos = JSON.parse(savedToDos);
-	toDos = parsedToDos;
-	parsedToDos.forEach(paintToRead)
+if(savedToReads !== null){
+	toReads = JSON.parse(savedToReads);
+	toReads.forEach(paintToRead)
 }
 
 // 알림modal
